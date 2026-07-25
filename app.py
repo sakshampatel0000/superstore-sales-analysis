@@ -167,7 +167,7 @@ st.markdown("---")
 st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
 st.dataframe(Data, use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
     # First & Last 5 Rows Side-by-Side (Tabs for clean look)
     st.markdown("<h3 class='sub-title'>🔍 Dataset Exploration (Head & Tail)</h3>", unsafe_allow_html=True)
