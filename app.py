@@ -38,35 +38,55 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
 # Sidebar File Uploader Component
 st.sidebar.markdown("---")
 st.sidebar.subheader("📁 Upload Your Own Data")
 uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
-# Dynamic Data Loading Logic (With Safety Validation)
+# Dynamic Data Loading Logic (With Auto-Missing Column Fill)
 @st.cache_data
 def load_data(file):
     if file is not None:
         try:
             df = pd.read_csv(file)
-            # Check required columns
-            required_cols = ['Sales', 'Profit', 'Category', 'Sub-Category', 'Region']
-            missing_cols = [col for col in required_cols if col not in df.columns]
             
-            if missing_cols:
-                st.sidebar.error(f"⚠️ Missing columns: {', '.join(missing_cols)}")
-                st.sidebar.info("🔄 Falling back to Default Superstore Dataset.")
-                return pd.read_csv("SampleSuperstore.csv")
+            # Sub-categories aur required columns list
+            required_cols = {
+                'Sales': 0.0,
+                'Profit': 0.0,
+                'Category': 'Unknown Category',
+                'Sub-Category': 'Unknown Sub-Category',
+                'Region': 'Unknown Region',
+                'Segment': 'Unknown Segment',
+                'Ship Mode': 'Standard Class',
+                'State': 'Unknown State',
+                'Quantity': 1,
+                'Discount': 0.0
+            }
+            
+            # Jo column CSV me missing hai, usme default value bhar do
+            missing_found = []
+            for col, default_val in required_cols.items():
+                if col not in df.columns:
+                    df[col] = default_val
+                    missing_found.append(col)
+            
+            if missing_found:
+                st.sidebar.warning(f"⚠️ Missing columns: {', '.join(missing_found)} (Auto-filled with 0/Default so app doesn't crash!)")
             else:
-                st.sidebar.success("✅ Valid Dataset Loaded!")
-                return df
+                st.sidebar.success("✅ Complete Dataset Loaded!")
+                
+            return df
         except Exception as e:
             st.sidebar.error("⚠️ Error reading file! Falling back to default.")
             return pd.read_csv("SampleSuperstore.csv")
     else:
         return pd.read_csv("SampleSuperstore.csv")
 
+# Load Dataset
+Data = load_data(uploaded_file)
+
+        
 # Load Dataset
 Data = load_data(uploaded_file)
 
