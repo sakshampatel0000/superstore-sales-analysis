@@ -189,7 +189,7 @@ st.markdown("---")
     # Info, Describe & Missing Values Section
 st.markdown("<h3 class='sub-title'>📊 Statistical Summary & Data Information</h3>", unsafe_allow_html=True)
     
-    col_info1, col_info2 = st.columns([1, 1])
+col_info1, col_info2 = st.columns([1, 1])
 
     with col_info1:
         st.write("##### 📋 Statistical Summary (`describe`)")
