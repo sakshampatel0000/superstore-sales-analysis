@@ -45,7 +45,6 @@ uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
 # Dynamic Data Loading Logic (With Auto-Missing Column Fill)
 
-   # Dynamic Data Loading Logic (With NaN / Null Filling)
 @st.cache_data
 def load_data(file):
     if file is not None:
@@ -90,8 +89,7 @@ def load_data(file):
 Data = load_data(uploaded_file)
 
         
-# Load Dataset
-Data = load_data(uploaded_file)
+
 
 
 # 2. Sidebar Navigation Switcher
