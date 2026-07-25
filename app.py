@@ -38,13 +38,14 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 # Sidebar File Uploader Component
 st.sidebar.markdown("---")
 st.sidebar.subheader("📁 Upload Your Own Data")
 uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
-# Dynamic Data Loading Logic (With Auto-Missing Column Fill)
 
+# Dynamic Data Loading Logic (With Auto-Missing Column Fill)
 @st.cache_data
 def load_data(file):
     if file is not None:
@@ -84,16 +85,14 @@ def load_data(file):
             return pd.read_csv("SampleSuperstore.csv")
     else:
         st.session_state['uploaded_cols'] = ['Sales', 'Profit', 'Category', 'Sub-Category', 'Region', 'Segment', 'Ship Mode', 'State', 'Quantity', 'Discount']
-        return pd.read_csv("SampleSuperstore.csv")             
+        return pd.read_csv("SampleSuperstore.csv")
+
+
 # Load Dataset
 Data = load_data(uploaded_file)
 
-        
-
-
-
 # 2. Sidebar Navigation Switcher
-st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
+st.sidebar.image("[cdn-icons-png.flaticon.com](https://cdn-icons-png.flaticon.com/512/3135/3135715.png)", width=80)
 st.sidebar.title("📌 Navigation Menu")
 
 page = st.sidebar.radio(
@@ -138,156 +137,152 @@ if page == "1️⃣ Data Overview & EDA (Notebook)":
     st.markdown("<h3 class='sub-title'>📌 Key Sales & Profit Metrics</h3>", unsafe_allow_html=True)
     
     # --- Safe Calculation Logic (Handling Missing/Null Columns) ---
-sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].sum():,.2f}"
-profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].sum():,.2f}"
-avg_sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].mean():,.2f}"
-avg_profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].mean():,.2f}"
+    sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].sum():,.2f}"
+    profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].sum():,.2f}"
+    avg_sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].mean():,.2f}"
+    avg_profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].mean():,.2f}"
 
-highest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].max():,.2f}"
-lowest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].min():,.2f}"
+    highest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].max():,.2f}"
+    lowest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].min():,.2f}"
 
-# --- Metric Display Cards ---
-m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-m_col1.metric("💰 Total Sales", sales_val)
-m_col2.metric("📈 Total Profit", profit_val)
-m_col3.metric("📊 Average Sales", avg_sales_val)
-m_col4.metric("📉 Average Profit", avg_profit_val)
+    # --- Metric Display Cards ---
+    m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+    m_col1.metric("💰 Total Sales", sales_val)
+    m_col2.metric("📈 Total Profit", profit_val)
+    m_col3.metric("📊 Average Sales", avg_sales_val)
+    m_col4.metric("📉 Average Profit", avg_profit_val)
 
-m_col5, m_col6, m_col7, m_col8 = st.columns(4)
-m_col5.metric("🏷️ Highest Sale", highest_sale_val)
-m_col6.metric("🔻 Lowest Sale", lowest_sale_val)
-m_col7.metric("📐 Total Rows (Shape)", f"{Data.shape[0]}")
-m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
+    m_col5, m_col6, m_col7, m_col8 = st.columns(4)
+    m_col5.metric("🏷️ Highest Sale", highest_sale_val)
+    m_col6.metric("🔻 Lowest Sale", lowest_sale_val)
+    m_col7.metric("📐 Total Rows (Shape)", f"{Data.shape[0]}")
+    m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
 
-st.markdown("---")
+    st.markdown("---")
 
-# Load Dataset Display (Cell [2] & [3])
-st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
-st.dataframe(Data, use_container_width=True)
+    # Load Dataset Display (Cell [2] & [3])
+    st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
+    st.dataframe(Data, use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# First & Last 5 Rows Side-by-Side (Tabs for clean look)
-st.markdown("<h3 class='sub-title'>🔍 Dataset Exploration (Head & Tail)</h3>", unsafe_allow_html=True)
+    # First & Last 5 Rows Side-by-Side (Tabs for clean look)
+    st.markdown("<h3 class='sub-title'>🔍 Dataset Exploration (Head & Tail)</h3>", unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["📌 First 5 Rows (head)", "📌 Last 5 Rows (tail)", "🏷️ Column Names"])
+    tab1, tab2, tab3 = st.tabs(["📌 First 5 Rows (head)", "📌 Last 5 Rows (tail)", "🏷️ Column Names"])
 
-with tab1:
-    st.write("##### First five rows of the Dataset:")
-    st.dataframe(Data.head(), use_container_width=True)
+    with tab1:
+        st.write("##### First five rows of the Dataset:")
+        st.dataframe(Data.head(), use_container_width=True)
 
-with tab2:
-    st.write("##### Last five rows of the Dataset:")
-    st.dataframe(Data.tail(), use_container_width=True)
+    with tab2:
+        st.write("##### Last five rows of the Dataset:")
+        st.dataframe(Data.tail(), use_container_width=True)
 
-with tab3:
-    st.write("##### Column Names:")
-    st.json(list(Data.columns))
+    with tab3:
+        st.write("##### Column Names:")
+        st.json(list(Data.columns))
 
-st.markdown("---")
+    st.markdown("---")
 
     # Info, Describe & Missing Values Section
-st.markdown("<h3 class='sub-title'>📊 Statistical Summary & Data Information</h3>", unsafe_allow_html=True)
-    
-col_info1, col_info2 = st.columns([1, 1])
+    st.markdown("<h3 class='sub-title'>📊 Statistical Summary & Data Information</h3>", unsafe_allow_html=True)
+        
+    col_info1, col_info2 = st.columns([1, 1])
 
-with col_info1:
-    st.write("##### 📋 Statistical Summary (`describe`)")
-    st.dataframe(Data.describe(), use_container_width=True)
+    with col_info1:
+        st.write("##### 📋 Statistical Summary (`describe`)")
+        st.dataframe(Data.describe(), use_container_width=True)
 
-with col_info2:
-    st.write("##### 🧹 Missing Values Count (`isnull`)")
-    missing_data = Data.isnull().sum().reset_index()
-    missing_data.columns = ["Column Name", "Missing Count"]
-    st.dataframe(missing_data, use_container_width=True)
+    with col_info2:
+        st.write("##### 🧹 Missing Values Count (`isnull`)")
+        missing_data = Data.isnull().sum().reset_index()
+        missing_data.columns = ["Column Name", "Missing Count"]
+        st.dataframe(missing_data, use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Top 10 Highest Sales (Cell [18])
-st.markdown("<h3 class='sub-title'>🏆 Top 10 Highest Sales</h3>", unsafe_allow_html=True)
-st.dataframe(Data.nlargest(10, "Sales"), use_container_width=True)
+    # Top 10 Highest Sales (Cell [18])
+    st.markdown("<h3 class='sub-title'>🏆 Top 10 Highest Sales</h3>", unsafe_allow_html=True)
+    st.dataframe(Data.nlargest(10, "Sales"), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Top 10 Highest Profit (Cell [19])
-st.markdown("<h3 class='sub-title'>💰 Top 10 Highest Profit</h3>", unsafe_allow_html=True)
-st.dataframe(Data.nlargest(10, "Profit"), use_container_width=True)
+    # Top 10 Highest Profit (Cell [19])
+    st.markdown("<h3 class='sub-title'>💰 Top 10 Highest Profit</h3>", unsafe_allow_html=True)
+    st.dataframe(Data.nlargest(10, "Profit"), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Top 10 Loss Making Orders (Cell [20])
-st.markdown("<h3 class='sub-title'>🔻 top 10 loss making orders</h3>", unsafe_allow_html=True)
-st.dataframe(Data.nsmallest(10, "Profit"), use_container_width=True)
+    # Top 10 Loss Making Orders (Cell [20])
+    st.markdown("<h3 class='sub-title'>🔻 Top 10 Loss Making Orders</h3>", unsafe_allow_html=True)
+    st.dataframe(Data.nsmallest(10, "Profit"), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Category Analysis (Cell [21] & [22])
-st.markdown("<h3 class='sub-title'>📦 Category Wise Aggregations</h3>", unsafe_allow_html=True)
-col_cat1, col_cat2 = st.columns(2)
+    # Category Analysis (Cell [21] & [22])
+    st.markdown("<h3 class='sub-title'>📦 Category Wise Aggregations</h3>", unsafe_allow_html=True)
+    col_cat1, col_cat2 = st.columns(2)
 
-with col_cat1:
-    st.write("##### sales by category")
-    st.dataframe(Data.groupby("Category")["Sales"].sum().reset_index(), use_container_width=True)
+    with col_cat1:
+        st.write("##### Sales by Category")
+        st.dataframe(Data.groupby("Category")["Sales"].sum().reset_index(), use_container_width=True)
 
-with col_cat2:
-    st.write("##### profit by category")
-    st.dataframe(Data.groupby("Category")["Profit"].sum().reset_index(), use_container_width=True)
+    with col_cat2:
+        st.write("##### Profit by Category")
+        st.dataframe(Data.groupby("Category")["Profit"].sum().reset_index(), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Sub-Category Analysis (Cell [23] & [24])
-st.markdown("<h3 class='sub-title'>🏷️ Sub-Category Wise Aggregations</h3>", unsafe_allow_html=True)
-col_sub1, col_sub2 = st.columns(2)
+    # Sub-Category Analysis (Cell [23] & [24])
+    st.markdown("<h3 class='sub-title'>🏷️ Sub-Category Wise Aggregations</h3>", unsafe_allow_html=True)
+    col_sub1, col_sub2 = st.columns(2)
 
-with col_sub1:
-    st.write("##### sales by sub-category")
-    st.dataframe(Data.groupby("Sub-Category")["Sales"].sum().reset_index(), use_container_width=True)
+    with col_sub1:
+        st.write("##### Sales by Sub-Category")
+        st.dataframe(Data.groupby("Sub-Category")["Sales"].sum().reset_index(), use_container_width=True)
 
-with col_sub2:
-    st.write("##### profit by sub-category")
-    st.dataframe(Data.groupby("Sub-Category")["Profit"].sum().reset_index(), use_container_width=True)
+    with col_sub2:
+        st.write("##### Profit by Sub-Category")
+        st.dataframe(Data.groupby("Sub-Category")["Profit"].sum().reset_index(), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# State Analysis (Cell [25] & [26])
-st.markdown("<h3 class='sub-title'>🗺️ State Wise Aggregations</h3>", unsafe_allow_html=True)
-col_st1, col_st2 = st.columns(2)
+    # State Analysis (Cell [25] & [26])
+    st.markdown("<h3 class='sub-title'>🗺️ State Wise Aggregations</h3>", unsafe_allow_html=True)
+    col_st1, col_st2 = st.columns(2)
 
-with col_st1:
-    st.write("##### sales by state")
-    st.dataframe(Data.groupby("State")["Sales"].sum().reset_index(), use_container_width=True)
+    with col_st1:
+        st.write("##### Sales by State")
+        st.dataframe(Data.groupby("State")["Sales"].sum().reset_index(), use_container_width=True)
 
-with col_st2:
-    st.write("##### profit by state")
-    st.dataframe(Data.groupby("State")["Profit"].sum().reset_index(), use_container_width=True)
+    with col_st2:
+        st.write("##### Profit by State")
+        st.dataframe(Data.groupby("State")["Profit"].sum().reset_index(), use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# Segment & Ship Mode Analysis (Cell [27] & [28])
-st.markdown("<h3 class='sub-title'>👥 Segment & Shipping Aggregations</h3>", unsafe_allow_html=True)
-col_seg, col_ship = st.columns(2)
+    # Segment & Ship Mode Analysis (Cell [27] & [28])
+    st.markdown("<h3 class='sub-title'>👥 Segment & Shipping Aggregations</h3>", unsafe_allow_html=True)
+    col_seg, col_ship = st.columns(2)
 
-with col_seg:
-    st.write("##### sales by segment")
-    st.dataframe(Data.groupby("Segment")["Sales"].sum().reset_index(), use_container_width=True)
+    with col_seg:
+        st.write("##### Sales by Segment")
+        st.dataframe(Data.groupby("Segment")["Sales"].sum().reset_index(), use_container_width=True)
 
-with col_ship:
-    st.write("##### sales by ship mode")
-    st.dataframe(Data.groupby("Ship Mode")["Sales"].sum().reset_index(), use_container_width=True)
+    with col_ship:
+        st.write("##### Sales by Ship Mode")
+        st.dataframe(Data.groupby("Ship Mode")["Sales"].sum().reset_index(), use_container_width=True)
 
-# =========================================================
-# PAGE 2 & PAGE 3 PLACEHOLDERS
-# =========================================================
 # =========================================================
 # PAGE 2: REGIONAL & CATEGORY ANALYSIS
 # =========================================================
 elif page == "2️⃣ Regional & Category Analysis":
-    import plotly.express as px
 
     st.markdown("<h1 class='main-title'>📊 Regional & Category Visual Analysis</h1>", unsafe_allow_html=True)
 
     # Sales by Category Analysis (Cell [29] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>sales by category analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales by Category Analysis</h3>", unsafe_allow_html=True)
     
     category_sales = Data.groupby("Category")["Sales"].sum().reset_index()
 
@@ -337,11 +332,11 @@ elif page == "2️⃣ Regional & Category Analysis":
         color="Category",
         text_auto=".2s",
         color_discrete_sequence=px.colors.qualitative.Vivid,
-        title="profit by category"
+        title="Profit by Category"
     )
     fig_profit.update_layout(
-        xaxis_title="category",
-        yaxis_title="profit",
+        xaxis_title="Category",
+        yaxis_title="Profit",
         showlegend=False,
         template="plotly_white",
         height=450
@@ -363,7 +358,7 @@ elif page == "2️⃣ Regional & Category Analysis":
     st.markdown("---")
 
     # Sales by Sub_Category Analysis (Cell [33] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>Sales by Sub_Category Analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales by Sub-Category Analysis</h3>", unsafe_allow_html=True)
     
     sub_category_sales = Data.groupby("Sub-Category")["Sales"].sum().reset_index()
 
@@ -375,10 +370,10 @@ elif page == "2️⃣ Regional & Category Analysis":
         color="Sub-Category",
         text_auto=".2s",
         color_discrete_sequence=px.colors.qualitative.Prism,
-        title="Sales by Sub_Category"
+        title="Sales by Sub-Category"
     )
     fig_sub_sales.update_layout(
-        xaxis_title="Sub_category",
+        xaxis_title="Sub-Category",
         yaxis_title="Sales",
         showlegend=False,
         template="plotly_white",
@@ -391,7 +386,7 @@ elif page == "2️⃣ Regional & Category Analysis":
     # Insights (Cell [34])
     st.markdown("""
     <div class="objective-box">
-        <h4>💡 insights</h4>
+        <h4>💡 Insights</h4>
         <ul>
             <li><b>Top-performing chairs</b> generated the highest sales and contribute a major portion of the business revenue.</li>
             <li><b>Phones and Chairs</b> are among the best selling sub-categories.</li>
@@ -416,10 +411,10 @@ elif page == "2️⃣ Regional & Category Analysis":
         color="Profit",
         text_auto=".2s",
         color_continuous_scale=px.colors.diverging.Tealrose,
-        title="Profit by Sub_Category"
+        title="Profit by Sub-Category"
     )
     fig_sub_profit.update_layout(
-        xaxis_title="Sub_Category",
+        xaxis_title="Sub-Category",
         yaxis_title="Profit",
         showlegend=False,
         template="plotly_white",
@@ -445,7 +440,7 @@ elif page == "2️⃣ Regional & Category Analysis":
     st.markdown("---")
 
     # Sales by Region Analysis (Cell [37] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>Sales by region analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales by Region Analysis</h3>", unsafe_allow_html=True)
     
     region_sales = Data.groupby("Region")["Sales"].sum().reset_index()
 
@@ -485,7 +480,7 @@ elif page == "2️⃣ Regional & Category Analysis":
     st.markdown("---")
 
     # Profit by Region Analysis (Cell [39] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>profit by region analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Profit by Region Analysis</h3>", unsafe_allow_html=True)
     
     region_profit = Data.groupby("Region")["Profit"].sum().reset_index()
 
@@ -526,13 +521,12 @@ elif page == "2️⃣ Regional & Category Analysis":
 # PAGE 3: SEGMENT & SHIPPING ANALYSIS
 # =========================================================
 elif page == "3️⃣ Segment & Shipping Analysis":
-    import plotly.express as px
 
     # Page Title
     st.markdown("<h1 class='main-title'>📈 Segment & Shipping Visual Analysis</h1>", unsafe_allow_html=True)
 
     # Sales by segment analysis (Cell [41] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>Sales by segment analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales by Segment Analysis</h3>", unsafe_allow_html=True)
     
     segment_sales = Data.groupby("Segment")["Sales"].sum().reset_index()
 
@@ -572,7 +566,7 @@ elif page == "3️⃣ Segment & Shipping Analysis":
     st.markdown("---")
 
     # Profit by segment analysis (Cell [43] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>profit by segment analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Profit by Segment Analysis</h3>", unsafe_allow_html=True)
     
     segment_profit = Data.groupby("Segment")["Profit"].sum().reset_index()
 
@@ -612,7 +606,7 @@ elif page == "3️⃣ Segment & Shipping Analysis":
     st.markdown("---")
 
     # Sales by ship mode analysis (Cell [45] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>sales by ship mode analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales by Ship Mode Analysis</h3>", unsafe_allow_html=True)
     
     shipmode_sales = Data.groupby("Ship Mode")["Sales"].sum().reset_index()
 
@@ -652,7 +646,7 @@ elif page == "3️⃣ Segment & Shipping Analysis":
     st.markdown("---")
 
     # Profit by ship mode analysis (Cell [47] - Colorful & Interactive)
-    st.markdown("<h3 class='sub-title'>profit by ship mode analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Profit by Ship Mode Analysis</h3>", unsafe_allow_html=True)
     
     shipmode_profit = Data.groupby("Ship Mode")["Profit"].sum().reset_index()
 
@@ -690,19 +684,15 @@ elif page == "3️⃣ Segment & Shipping Analysis":
     """, unsafe_allow_html=True)
 
 # =========================================================
-# PAGE 4: ADVANCED DISTRIBUTIONS & CORRELATIONS
-# =========================================================
-# =========================================================
 # PAGE 4: SALES VS PROFIT ANALYSIS
 # =========================================================
 elif page == "4️⃣ Sales vs Profit and distribution Analysis":
-    import plotly.express as px
 
     # Page Title
     st.markdown("<h1 class='main-title'>📈 Sales vs Profit Analysis</h1>", unsafe_allow_html=True)
 
     # Sales vs profit analysis (Cell [49] - Colorful & Interactive Scatter Plot)
-    st.markdown("<h3 class='sub-title'>Sales vs profit analysis</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales vs Profit Analysis</h3>", unsafe_allow_html=True)
 
     fig_scatter = px.scatter(
         Data,
@@ -738,7 +728,7 @@ elif page == "4️⃣ Sales vs Profit and distribution Analysis":
     st.markdown("---")
 
     # Sales Distribution (Cell [51] - Interactive Histogram)
-    st.markdown("<h3 class='sub-title'>Sales distribution</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Sales Distribution</h3>", unsafe_allow_html=True)
 
     fig_sales_dist = px.histogram(
         Data,
@@ -773,7 +763,7 @@ elif page == "4️⃣ Sales vs Profit and distribution Analysis":
     st.markdown("---")
 
     # Profit Distribution (Cell [53] - Interactive Histogram)
-    st.markdown("<h3 class='sub-title'>Profit distribution</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Profit Distribution</h3>", unsafe_allow_html=True)
 
     fig_profit_dist = px.histogram(
         Data,
@@ -807,7 +797,7 @@ elif page == "4️⃣ Sales vs Profit and distribution Analysis":
     st.markdown("---")
 
     # Correlation Heatmap (Cell [55] - Interactive Plotly Heatmap)
-    st.markdown("<h3 class='sub-title'>Correlation heatmap</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sub-title'>Correlation Heatmap</h3>", unsafe_allow_html=True)
 
     # Calculating correlation matrix
     corr_matrix = Data[["Sales", "Profit", "Quantity", "Discount"]].corr().round(4)
@@ -1019,7 +1009,8 @@ elif page == "5️⃣ Business Dashboard & Final Insights":
         </ul>
     </div>
     """, unsafe_allow_html=True)
-    # =========================================================
+
+# =========================================================
 # PAGE 6: AI BUSINESS ASSISTANT / CHATBOT
 # =========================================================
 elif page == "🤖 AI Business Assistant / Chatbot":
@@ -1041,31 +1032,31 @@ elif page == "🤖 AI Business Assistant / Chatbot":
             return f"💵 **Total Sales:** **${val:,.2f}**"
 
         # 3. Highest Sales Region / Top Region
-        elif "highest sales region" in q or "top sales region" in q or "best region" in q or "region" in q and "sales" in q:
+        elif "highest sales region" in q or "top sales region" in q or "best region" in q or ("region" in q and "sales" in q):
             reg = df.groupby("Region")["Sales"].sum().idxmax()
             val = df.groupby("Region")["Sales"].sum().max()
             return f"🌍 **Highest Sales Region:** **{reg}** (Total Sales: **${val:,.2f}**)"
 
         # 4. Highest Profit Region
-        elif "highest profit region" in q or "top profit region" in q or "region" in q and "profit" in q:
+        elif "highest profit region" in q or "top profit region" in q or ("region" in q and "profit" in q):
             reg = df.groupby("Region")["Profit"].sum().idxmax()
             val = df.groupby("Region")["Profit"].sum().max()
             return f"🏆 **Highest Profit Region:** **{reg}** (Total Profit: **${val:,.2f}**)"
 
         # 5. Highest Sales Category / Best Category
-        elif "top category" in q or "best category" in q or "highest sales category" in q or "category" in q and "sales" in q:
+        elif "top category" in q or "best category" in q or "highest sales category" in q or ("category" in q and "sales" in q):
             cat = df.groupby("Category")["Sales"].sum().idxmax()
             val = df.groupby("Category")["Sales"].sum().max()
             return f"📦 **Highest Sales Category:** **{cat}** (Total Sales: **${val:,.2f}**)"
 
         # 6. Highest Profit Category
-        elif "highest profit category" in q or "most profitable category" in q or "category" in q and "profit" in q:
+        elif "highest profit category" in q or "most profitable category" in q or ("category" in q and "profit" in q):
             cat = df.groupby("Category")["Profit"].sum().idxmax()
             val = df.groupby("Category")["Profit"].sum().max()
             return f"💎 **Most Profitable Category:** **{cat}** (Total Profit: **${val:,.2f}**)"
 
         # 7. Best Sub-Category / Top Sub Category
-        elif "top sub category" in q or "best sub category" in q or "sub category" in q and "sales" in q:
+        elif "top sub category" in q or "best sub category" in q or ("sub category" in q and "sales" in q):
             sub = df.groupby("Sub-Category")["Sales"].sum().idxmax()
             val = df.groupby("Sub-Category")["Sales"].sum().max()
             return f"🏷️ **Top Sub-Category (Sales):** **{sub}** (Total Sales: **${val:,.2f}**)"
@@ -1089,12 +1080,12 @@ elif page == "🤖 AI Business Assistant / Chatbot":
             top_sub_profit = df.groupby("Sub-Category")["Profit"].sum().idxmax()
             
             summary_msg = f"""
-            ### 📊 Quick Superstore Summary:
-            * 💰 **Total Sales:** ${df['Sales'].sum():,.2f}
-            * 📈 **Total Profit:** ${df['Profit'].sum():,.2f}
-            * 🌍 **Top Sales Region:** {top_reg_sales}
-            * 📦 **Top Sales Category:** {top_cat_sales}
-            * 💎 **Most Profitable Sub-Category:** {top_sub_profit}
+### 📊 Quick Superstore Summary:
+* 💰 **Total Sales:** ${df['Sales'].sum():,.2f}
+* 📈 **Total Profit:** ${df['Profit'].sum():,.2f}
+* 🌍 **Top Sales Region:** {top_reg_sales}
+* 📦 **Top Sales Category:** {top_cat_sales}
+* 💎 **Most Profitable Sub-Category:** {top_sub_profit}
             """
             return summary_msg
 
@@ -1127,3 +1118,7 @@ elif page == "🤖 AI Business Assistant / Chatbot":
         st.session_state.messages.append({"role": "assistant", "content": bot_response})
         with st.chat_message("assistant"):
             st.markdown(bot_response)
+
+    
+
+            
