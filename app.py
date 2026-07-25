@@ -163,30 +163,30 @@ m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
 
 st.markdown("---")
 
-    # Load Dataset Display (Cell [2] & [3])
+# Load Dataset Display (Cell [2] & [3])
 st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
 st.dataframe(Data, use_container_width=True)
 
 st.markdown("---")
 
-    # First & Last 5 Rows Side-by-Side (Tabs for clean look)
+# First & Last 5 Rows Side-by-Side (Tabs for clean look)
 st.markdown("<h3 class='sub-title'>🔍 Dataset Exploration (Head & Tail)</h3>", unsafe_allow_html=True)
-    
-    tab1, tab2, tab3 = st.tabs(["📌 First 5 Rows (head)", "📌 Last 5 Rows (tail)", "🏷️ Column Names"])
-    
-    with tab1:
-        st.write("##### First five rows of the Dataset:")
-        st.dataframe(Data.head(), use_container_width=True)
 
-    with tab2:
-        st.write("##### Last five rows of the Dataset:")
-        st.dataframe(Data.tail(), use_container_width=True)
+tab1, tab2, tab3 = st.tabs(["📌 First 5 Rows (head)", "📌 Last 5 Rows (tail)", "🏷️ Column Names"])
 
-    with tab3:
-        st.write("##### Column Names:")
-        st.json(list(Data.columns))
+with tab1:
+    st.write("##### First five rows of the Dataset:")
+    st.dataframe(Data.head(), use_container_width=True)
 
-    st.markdown("---")
+with tab2:
+    st.write("##### Last five rows of the Dataset:")
+    st.dataframe(Data.tail(), use_container_width=True)
+
+with tab3:
+    st.write("##### Column Names:")
+    st.json(list(Data.columns))
+
+st.markdown("---")
 
     # Info, Describe & Missing Values Section
     st.markdown("<h3 class='sub-title'>📊 Statistical Summary & Data Information</h3>", unsafe_allow_html=True)
