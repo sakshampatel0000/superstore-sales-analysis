@@ -92,7 +92,7 @@ def load_data(file):
 Data = load_data(uploaded_file)
 
 # 2. Sidebar Navigation Switcher
-st.sidebar.image("[cdn-icons-png.flaticon.com](https://cdn-icons-png.flaticon.com/512/3135/3135715.png)", width=80)
+st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("📌 Navigation Menu")
 
 page = st.sidebar.radio(
