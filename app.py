@@ -58,7 +58,8 @@ page = st.sidebar.radio(
         "2️⃣ Regional & Category Analysis",
         "3️⃣ Segment & Shipping Analysis",
         "4️⃣ Sales vs Profit and distribution Analysis",
-        "5️⃣ Business Dashboard & Final Insights"
+        "5️⃣ Business Dashboard & Final Insights",
+        "🤖 AI Business Assistant / Chatbot"
     ]
 )
 
@@ -963,3 +964,111 @@ elif page == "5️⃣ Business Dashboard & Final Insights":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+    # =========================================================
+# PAGE 6: AI BUSINESS ASSISTANT / CHATBOT
+# =========================================================
+elif page == "🤖 AI Business Assistant / Chatbot":
+    st.markdown("<h1 class='main-title'>🤖 Superstore Smart AI Assistant</h1>", unsafe_allow_html=True)
+    st.markdown("Aap superstore data ke bare me koi bhi question pooch sakte hain (e.g., *'total profit'*, *'highest sales region'*, *'best sub category'*).")
+
+    # Helper Function to Answer User Queries Smartly
+    def answer_query(query, df):
+        q = query.lower().strip()
+
+        # 1. Total Profit
+        if "total profit" in q or "overall profit" in q or "kitna profit" in q:
+            val = df['Profit'].sum()
+            return f"💰 **Total Profit:** **${val:,.2f}**"
+
+        # 2. Total Sales
+        elif "total sales" in q or "overall sales" in q or "kitni sales" in q:
+            val = df['Sales'].sum()
+            return f"💵 **Total Sales:** **${val:,.2f}**"
+
+        # 3. Highest Sales Region / Top Region
+        elif "highest sales region" in q or "top sales region" in q or "best region" in q or "region" in q and "sales" in q:
+            reg = df.groupby("Region")["Sales"].sum().idxmax()
+            val = df.groupby("Region")["Sales"].sum().max()
+            return f"🌍 **Highest Sales Region:** **{reg}** (Total Sales: **${val:,.2f}**)"
+
+        # 4. Highest Profit Region
+        elif "highest profit region" in q or "top profit region" in q or "region" in q and "profit" in q:
+            reg = df.groupby("Region")["Profit"].sum().idxmax()
+            val = df.groupby("Region")["Profit"].sum().max()
+            return f"🏆 **Highest Profit Region:** **{reg}** (Total Profit: **${val:,.2f}**)"
+
+        # 5. Highest Sales Category / Best Category
+        elif "top category" in q or "best category" in q or "highest sales category" in q or "category" in q and "sales" in q:
+            cat = df.groupby("Category")["Sales"].sum().idxmax()
+            val = df.groupby("Category")["Sales"].sum().max()
+            return f"📦 **Highest Sales Category:** **{cat}** (Total Sales: **${val:,.2f}**)"
+
+        # 6. Highest Profit Category
+        elif "highest profit category" in q or "most profitable category" in q or "category" in q and "profit" in q:
+            cat = df.groupby("Category")["Profit"].sum().idxmax()
+            val = df.groupby("Category")["Profit"].sum().max()
+            return f"💎 **Most Profitable Category:** **{cat}** (Total Profit: **${val:,.2f}**)"
+
+        # 7. Best Sub-Category / Top Sub Category
+        elif "top sub category" in q or "best sub category" in q or "sub category" in q and "sales" in q:
+            sub = df.groupby("Sub-Category")["Sales"].sum().idxmax()
+            val = df.groupby("Sub-Category")["Sales"].sum().max()
+            return f"🏷️ **Top Sub-Category (Sales):** **{sub}** (Total Sales: **${val:,.2f}**)"
+
+        # 8. Worst Sub-Category / Loss Making Sub-Category
+        elif "loss sub category" in q or "worst sub category" in q or "lowest profit sub category" in q:
+            sub = df.groupby("Sub-Category")["Profit"].sum().idxmin()
+            val = df.groupby("Sub-Category")["Profit"].sum().min()
+            return f"🔻 **Lowest Profit / Loss Sub-Category:** **{sub}** (Total Profit: **${val:,.2f}**)"
+
+        # 9. Top State
+        elif "top state" in q or "highest sales state" in q or "best state" in q:
+            st_name = df.groupby("State")["Sales"].sum().idxmax()
+            val = df.groupby("State")["Sales"].sum().max()
+            return f"🏛️ **Top State by Sales:** **{st_name}** (Total Sales: **${val:,.2f}**)"
+
+        # 10. Summary / Everything (Sab Kuch)
+        elif "summary" in q or "sab kuch" in q or "overview" in q or "all info" in q:
+            top_reg_sales = df.groupby("Region")["Sales"].sum().idxmax()
+            top_cat_sales = df.groupby("Category")["Sales"].sum().idxmax()
+            top_sub_profit = df.groupby("Sub-Category")["Profit"].sum().idxmax()
+            
+            summary_msg = f"""
+            ### 📊 Quick Superstore Summary:
+            * 💰 **Total Sales:** ${df['Sales'].sum():,.2f}
+            * 📈 **Total Profit:** ${df['Profit'].sum():,.2f}
+            * 🌍 **Top Sales Region:** {top_reg_sales}
+            * 📦 **Top Sales Category:** {top_cat_sales}
+            * 💎 **Most Profitable Sub-Category:** {top_sub_profit}
+            """
+            return summary_msg
+
+        # Default fallback
+        else:
+            return "🤖 Aap in keywords se pooch sakte hain: **'total profit'**, **'total sales'**, **'top region'**, **'top category'**, **'top state'**, ya **'sab kuch'**."
+
+    # Chat UI in Streamlit
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "Hello! Mai aapka Superstore Data Assistant hoon. Aap kya poochna chahte hain?"}
+        ]
+
+    # Display Chat History
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # User Input Field
+    if prompt := st.chat_input("Poochiye (e.g., total profit, top region, top category, sab kuch)..."):
+        # Add User Message
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # Process Answer
+        bot_response = answer_query(prompt, Data)
+
+        # Add Assistant Response
+        st.session_state.messages.append({"role": "assistant", "content": bot_response})
+        with st.chat_message("assistant"):
+            st.markdown(bot_response)
