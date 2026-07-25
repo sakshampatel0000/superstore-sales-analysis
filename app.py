@@ -44,27 +44,30 @@ st.sidebar.subheader("📁 Upload Your Own Data")
 uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
 # Dynamic Data Loading Logic (With Auto-Missing Column Fill)
+
+   # Dynamic Data Loading Logic (With NaN / Null Filling)
 @st.cache_data
 def load_data(file):
     if file is not None:
         try:
             df = pd.read_csv(file)
             
-            # Sub-categories aur required columns list
+            # Save original present columns to session state
+            st.session_state['uploaded_cols'] = list(df.columns)
+            
             required_cols = {
-                'Sales': 0.0,
-                'Profit': 0.0,
-                'Category': 'Unknown Category',
-                'Sub-Category': 'Unknown Sub-Category',
-                'Region': 'Unknown Region',
-                'Segment': 'Unknown Segment',
-                'Ship Mode': 'Standard Class',
-                'State': 'Unknown State',
-                'Quantity': 1,
-                'Discount': 0.0
+                'Sales': np.nan,
+                'Profit': np.nan,
+                'Category': 'Null',
+                'Sub-Category': 'Null',
+                'Region': 'Null',
+                'Segment': 'Null',
+                'Ship Mode': 'Null',
+                'State': 'Null',
+                'Quantity': np.nan,
+                'Discount': np.nan
             }
             
-            # Jo column CSV me missing hai, usme default value bhar do
             missing_found = []
             for col, default_val in required_cols.items():
                 if col not in df.columns:
@@ -72,7 +75,7 @@ def load_data(file):
                     missing_found.append(col)
             
             if missing_found:
-                st.sidebar.warning(f"⚠️ Missing columns: {', '.join(missing_found)} (Auto-filled with 0/Default so app doesn't crash!)")
+                st.sidebar.warning(f"⚠️ Missing columns: {', '.join(missing_found)} (Set to Null)")
             else:
                 st.sidebar.success("✅ Complete Dataset Loaded!")
                 
@@ -81,8 +84,8 @@ def load_data(file):
             st.sidebar.error("⚠️ Error reading file! Falling back to default.")
             return pd.read_csv("SampleSuperstore.csv")
     else:
-        return pd.read_csv("SampleSuperstore.csv")
-
+        st.session_state['uploaded_cols'] = ['Sales', 'Profit', 'Category', 'Sub-Category', 'Region', 'Segment', 'Ship Mode', 'State', 'Quantity', 'Discount']
+        return pd.read_csv("SampleSuperstore.csv")             
 # Load Dataset
 Data = load_data(uploaded_file)
 
@@ -136,17 +139,27 @@ if page == "1️⃣ Data Overview & EDA (Notebook)":
     # Metrics Overview (Colorful Cards for Cells 12 to 17)
     st.markdown("<h3 class='sub-title'>📌 Key Sales & Profit Metrics</h3>", unsafe_allow_html=True)
     
-    m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-    m_col1.metric("💰 Total Sales", f"${Data['Sales'].sum():,.2f}")
-    m_col2.metric("📈 Total Profit", f"${Data['Profit'].sum():,.2f}")
-    m_col3.metric("📊 Average Sales", f"${Data['Sales'].mean():,.2f}")
-    m_col4.metric("📉 Average Profit", f"${Data['Profit'].mean():,.2f}")
+    # --- Safe Calculation Logic (Handling Missing/Null Columns) ---
+sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].sum():,.2f}"
+profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].sum():,.2f}"
+avg_sales_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].mean():,.2f}"
+avg_profit_val = "Null" if Data['Profit'].isna().all() else f"${Data['Profit'].mean():,.2f}"
 
-    m_col5, m_col6, m_col7, m_col8 = st.columns(4)
-    m_col5.metric("🚀 Highest Sale", f"${Data['Sales'].max():,.2f}")
-    m_col6.metric("🔻 Lowest Sale", f"${Data['Sales'].min():,.2f}")
-    m_col7.metric("📐 Total Rows (Shape)", f"{Data.shape[0]}")
-    m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
+highest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].max():,.2f}"
+lowest_sale_val = "Null" if Data['Sales'].isna().all() else f"${Data['Sales'].min():,.2f}"
+
+# --- Metric Display Cards ---
+m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+m_col1.metric("💰 Total Sales", sales_val)
+m_col2.metric("📈 Total Profit", profit_val)
+m_col3.metric("📊 Average Sales", avg_sales_val)
+m_col4.metric("📉 Average Profit", avg_profit_val)
+
+m_col5, m_col6, m_col7, m_col8 = st.columns(4)
+m_col5.metric("🏷️ Highest Sale", highest_sale_val)
+m_col6.metric("🔻 Lowest Sale", lowest_sale_val)
+m_col7.metric("📐 Total Rows (Shape)", f"{Data.shape[0]}")
+m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
 
     st.markdown("---")
 
