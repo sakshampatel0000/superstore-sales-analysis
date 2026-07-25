@@ -161,7 +161,7 @@ m_col6.metric("🔻 Lowest Sale", lowest_sale_val)
 m_col7.metric("📐 Total Rows (Shape)", f"{Data.shape[0]}")
 m_col8.metric("🔄 Duplicate Rows", f"{Data.duplicated().sum()}")
 
-    st.markdown("---")
+st.markdown("---")
 
     # Load Dataset Display (Cell [2] & [3])
     st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
