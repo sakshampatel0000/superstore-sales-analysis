@@ -165,7 +165,7 @@ st.markdown("---")
 
     # Load Dataset Display (Cell [2] & [3])
 st.markdown("<h3 class='sub-title'>📁 Full Dataset Load</h3>", unsafe_allow_html=True)
-    st.dataframe(Data, use_container_width=True)
+st.dataframe(Data, use_container_width=True)
 
     st.markdown("---")
 
