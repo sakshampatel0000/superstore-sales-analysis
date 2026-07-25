@@ -39,12 +39,24 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Dataset Loading Function
-@st.cache_data
-def load_data():
-    return pd.read_csv("SampleSuperstore.csv")
+# Sidebar File Uploader Component
+st.sidebar.markdown("---")
+st.sidebar.subheader("📁 Upload Your Own Data")
+uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
-Data = load_data()
+# Dynamic Data Loading Logic
+@st.cache_data
+def load_data(file):
+    if file is not None:
+        return pd.read_csv(file)
+    else:
+        return pd.read_csv("SampleSuperstore.csv")
+
+# Load Dataset (Either Uploaded or Default)
+Data = load_data(uploaded_file)
+
+if uploaded_file is not None:
+    st.sidebar.success("✅ Custom Dataset Loaded!")
 
 
 # 2. Sidebar Navigation Switcher
