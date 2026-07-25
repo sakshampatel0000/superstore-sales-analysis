@@ -191,89 +191,89 @@ st.markdown("<h3 class='sub-title'>📊 Statistical Summary & Data Information</
     
 col_info1, col_info2 = st.columns([1, 1])
 
-    with col_info1:
-        st.write("##### 📋 Statistical Summary (`describe`)")
-        st.dataframe(Data.describe(), use_container_width=True)
+with col_info1:
+    st.write("##### 📋 Statistical Summary (`describe`)")
+    st.dataframe(Data.describe(), use_container_width=True)
 
-    with col_info2:
-        st.write("##### 🧹 Missing Values Count (`isnull`)")
-        missing_data = Data.isnull().sum().reset_index()
-        missing_data.columns = ["Column Name", "Missing Count"]
-        st.dataframe(missing_data, use_container_width=True)
+with col_info2:
+    st.write("##### 🧹 Missing Values Count (`isnull`)")
+    missing_data = Data.isnull().sum().reset_index()
+    missing_data.columns = ["Column Name", "Missing Count"]
+    st.dataframe(missing_data, use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Top 10 Highest Sales (Cell [18])
-    st.markdown("<h3 class='sub-title'>🏆 Top 10 Highest Sales</h3>", unsafe_allow_html=True)
-    st.dataframe(Data.nlargest(10, "Sales"), use_container_width=True)
+# Top 10 Highest Sales (Cell [18])
+st.markdown("<h3 class='sub-title'>🏆 Top 10 Highest Sales</h3>", unsafe_allow_html=True)
+st.dataframe(Data.nlargest(10, "Sales"), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Top 10 Highest Profit (Cell [19])
-    st.markdown("<h3 class='sub-title'>💰 Top 10 Highest Profit</h3>", unsafe_allow_html=True)
-    st.dataframe(Data.nlargest(10, "Profit"), use_container_width=True)
+# Top 10 Highest Profit (Cell [19])
+st.markdown("<h3 class='sub-title'>💰 Top 10 Highest Profit</h3>", unsafe_allow_html=True)
+st.dataframe(Data.nlargest(10, "Profit"), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Top 10 Loss Making Orders (Cell [20])
-    st.markdown("<h3 class='sub-title'>🔻 top 10 loss making orders</h3>", unsafe_allow_html=True)
-    st.dataframe(Data.nsmallest(10, "Profit"), use_container_width=True)
+# Top 10 Loss Making Orders (Cell [20])
+st.markdown("<h3 class='sub-title'>🔻 top 10 loss making orders</h3>", unsafe_allow_html=True)
+st.dataframe(Data.nsmallest(10, "Profit"), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Category Analysis (Cell [21] & [22])
-    st.markdown("<h3 class='sub-title'>📦 Category Wise Aggregations</h3>", unsafe_allow_html=True)
-    col_cat1, col_cat2 = st.columns(2)
+# Category Analysis (Cell [21] & [22])
+st.markdown("<h3 class='sub-title'>📦 Category Wise Aggregations</h3>", unsafe_allow_html=True)
+col_cat1, col_cat2 = st.columns(2)
 
-    with col_cat1:
-        st.write("##### sales by category")
-        st.dataframe(Data.groupby("Category")["Sales"].sum().reset_index(), use_container_width=True)
+with col_cat1:
+    st.write("##### sales by category")
+    st.dataframe(Data.groupby("Category")["Sales"].sum().reset_index(), use_container_width=True)
 
-    with col_cat2:
-        st.write("##### profit by category")
-        st.dataframe(Data.groupby("Category")["Profit"].sum().reset_index(), use_container_width=True)
+with col_cat2:
+    st.write("##### profit by category")
+    st.dataframe(Data.groupby("Category")["Profit"].sum().reset_index(), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Sub-Category Analysis (Cell [23] & [24])
-    st.markdown("<h3 class='sub-title'>🏷️ Sub-Category Wise Aggregations</h3>", unsafe_allow_html=True)
-    col_sub1, col_sub2 = st.columns(2)
+# Sub-Category Analysis (Cell [23] & [24])
+st.markdown("<h3 class='sub-title'>🏷️ Sub-Category Wise Aggregations</h3>", unsafe_allow_html=True)
+col_sub1, col_sub2 = st.columns(2)
 
-    with col_sub1:
-        st.write("##### sales by sub-category")
-        st.dataframe(Data.groupby("Sub-Category")["Sales"].sum().reset_index(), use_container_width=True)
+with col_sub1:
+    st.write("##### sales by sub-category")
+    st.dataframe(Data.groupby("Sub-Category")["Sales"].sum().reset_index(), use_container_width=True)
 
-    with col_sub2:
-        st.write("##### profit by sub-category")
-        st.dataframe(Data.groupby("Sub-Category")["Profit"].sum().reset_index(), use_container_width=True)
+with col_sub2:
+    st.write("##### profit by sub-category")
+    st.dataframe(Data.groupby("Sub-Category")["Profit"].sum().reset_index(), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # State Analysis (Cell [25] & [26])
-    st.markdown("<h3 class='sub-title'>🗺️ State Wise Aggregations</h3>", unsafe_allow_html=True)
-    col_st1, col_st2 = st.columns(2)
+# State Analysis (Cell [25] & [26])
+st.markdown("<h3 class='sub-title'>🗺️ State Wise Aggregations</h3>", unsafe_allow_html=True)
+col_st1, col_st2 = st.columns(2)
 
-    with col_st1:
-        st.write("##### sales by state")
-        st.dataframe(Data.groupby("State")["Sales"].sum().reset_index(), use_container_width=True)
+with col_st1:
+    st.write("##### sales by state")
+    st.dataframe(Data.groupby("State")["Sales"].sum().reset_index(), use_container_width=True)
 
-    with col_st2:
-        st.write("##### profit by state")
-        st.dataframe(Data.groupby("State")["Profit"].sum().reset_index(), use_container_width=True)
+with col_st2:
+    st.write("##### profit by state")
+    st.dataframe(Data.groupby("State")["Profit"].sum().reset_index(), use_container_width=True)
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Segment & Ship Mode Analysis (Cell [27] & [28])
-    st.markdown("<h3 class='sub-title'>👥 Segment & Shipping Aggregations</h3>", unsafe_allow_html=True)
-    col_seg, col_ship = st.columns(2)
+# Segment & Ship Mode Analysis (Cell [27] & [28])
+st.markdown("<h3 class='sub-title'>👥 Segment & Shipping Aggregations</h3>", unsafe_allow_html=True)
+col_seg, col_ship = st.columns(2)
 
-    with col_seg:
-        st.write("##### sales by segment")
-        st.dataframe(Data.groupby("Segment")["Sales"].sum().reset_index(), use_container_width=True)
+with col_seg:
+    st.write("##### sales by segment")
+    st.dataframe(Data.groupby("Segment")["Sales"].sum().reset_index(), use_container_width=True)
 
-    with col_ship:
-        st.write("##### sales by ship mode")
-        st.dataframe(Data.groupby("Ship Mode")["Sales"].sum().reset_index(), use_container_width=True)
+with col_ship:
+    st.write("##### sales by ship mode")
+    st.dataframe(Data.groupby("Ship Mode")["Sales"].sum().reset_index(), use_container_width=True)
 
 # =========================================================
 # PAGE 2 & PAGE 3 PLACEHOLDERS
