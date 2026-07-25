@@ -44,19 +44,31 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("📁 Upload Your Own Data")
 uploaded_file = st.sidebar.file_uploader("Upload CSV File", type=["csv"])
 
-# Dynamic Data Loading Logic
+# Dynamic Data Loading Logic (With Safety Validation)
 @st.cache_data
 def load_data(file):
     if file is not None:
-        return pd.read_csv(file)
+        try:
+            df = pd.read_csv(file)
+            # Check required columns
+            required_cols = ['Sales', 'Profit', 'Category', 'Sub-Category', 'Region']
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            
+            if missing_cols:
+                st.sidebar.error(f"⚠️ Missing columns: {', '.join(missing_cols)}")
+                st.sidebar.info("🔄 Falling back to Default Superstore Dataset.")
+                return pd.read_csv("SampleSuperstore.csv")
+            else:
+                st.sidebar.success("✅ Valid Dataset Loaded!")
+                return df
+        except Exception as e:
+            st.sidebar.error("⚠️ Error reading file! Falling back to default.")
+            return pd.read_csv("SampleSuperstore.csv")
     else:
         return pd.read_csv("SampleSuperstore.csv")
 
-# Load Dataset (Either Uploaded or Default)
+# Load Dataset
 Data = load_data(uploaded_file)
-
-if uploaded_file is not None:
-    st.sidebar.success("✅ Custom Dataset Loaded!")
 
 
 # 2. Sidebar Navigation Switcher
